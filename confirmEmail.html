@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Confirmation</title>
+    <!-- Include the Realm SDK from a CDN -->
+    <script src="https://unpkg.com/realm-web@1.7.1/dist/bundle.iife.js"></script>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const appId = 'application-0-laeqg';
+            const app = new Realm.App({ id: appId });
+        
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const tokenId = urlParams.get('tokenId');
+        
+            console.log("Token:", token);  // For debugging
+            console.log("TokenId:", tokenId);  // For debugging
+        
+            if (!token || !tokenId) {
+                document.body.innerHTML = '<p>Error: Token or TokenId missing in the URL.</p>';
+                return;
+            }
+        
+            app.emailPasswordAuth.confirmUser(token, tokenId)
+                .then(() => {
+                    document.body.innerHTML = '<p>Email confirmation successful!</p>';
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.body.innerHTML = `<p>Email confirmation failed: ${err.message}. Please check the error logs for details.</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
